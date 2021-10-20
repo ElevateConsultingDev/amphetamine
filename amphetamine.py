@@ -1,4 +1,5 @@
 import datetime
+import math
 import time
 
 import pyautogui
@@ -17,6 +18,7 @@ max_time = 100  # 4 minutes 10 seconds
 cont = True
 char_count = 0
 wiggle_count = 0
+distance = 0
 last_change = get_time()
 mouse_position = pyautogui.position()
 old_mouse_position = mouse_position
@@ -39,14 +41,14 @@ def on_press(key):
 
 
 def check_mouse_movement():
-    global last_change
-    global mouse_position
-    global old_mouse_position
+    global last_change, mouse_position, old_mouse_position, distance
     mouse_position = pyautogui.position()
     if mouse_position == old_mouse_position:
         return False
     else:
         last_change = get_time()
+        d = int(calc_distance(old_mouse_position, mouse_position))
+        distance += d
         old_mouse_position = mouse_position
         return True
 
@@ -63,8 +65,15 @@ def print_time():
     time_since_last_change = epoch_time - last_change
     with term.hidden_cursor():
         print(term.clear)
-        print(term.move_xy(1,
-                           1) + f't:{str(datetime.timedelta(seconds=time_since_last_change)):<8}c:{char_count:<5}w:{wiggle_count}')
+        print(term.move_xy(1, 1) +
+              f't:{str(datetime.timedelta(seconds=time_since_last_change)):<8}'
+              f'c:{char_count:<5}'
+              f'w:{wiggle_count:<3}'
+              f'd:{distance}')
+
+
+def calc_distance(p1, p2):
+    return math.sqrt(((p1[0] - p2[0]) ** 2) + ((p1[1] - p2[1]) ** 2))
 
 
 listener = keyboard.Listener(on_press=on_press)
