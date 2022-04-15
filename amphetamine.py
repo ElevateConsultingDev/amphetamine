@@ -14,7 +14,6 @@ def get_time():
 term = Terminal()
 
 max_time = 100  # 4 minutes 10 seconds
-# max_time = 10
 cont = True
 char_count = 0
 wiggle_count = 0
@@ -27,7 +26,7 @@ old_mouse_position = mouse_position
 def wiggle():
     global last_change, wiggle_count
     old_position = pyautogui.position()
-    pyautogui.moveTo(1, 1)
+    pyautogui.moveTo(10, 10)
     pyautogui.press('shift')
     pyautogui.moveTo(old_position)
     last_change = get_time()
